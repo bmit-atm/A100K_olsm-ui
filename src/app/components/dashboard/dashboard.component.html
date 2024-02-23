@@ -1,1 +1,30 @@
-<p>dashboard works!</p>
+<mat-card>
+    <mat-card-title>Outlook Signature Generator</mat-card-title>
+    <mat-card-content>
+        <form action="">
+            <mat-form-field>
+                <mat-label>Benutzername</mat-label>
+                <input matInput placeholder="Benutzername">
+            </mat-form-field>
+            <div>
+                
+                <input  type="file" class="file-input"
+                #fileUpload>
+            </div>
+            
+            
+
+            
+            
+        
+            <div class="file-upload">
+            
+                <button  mat-flat-button color="primary" class="upload-btn"
+                (click)="fileUpload.click()">
+                    Bild
+                </button>
+            </div>
+            <button color="accent" mat-flat-button type="submit">Generieren</button>
+        </form>
+    </mat-card-content>
+</mat-card>
