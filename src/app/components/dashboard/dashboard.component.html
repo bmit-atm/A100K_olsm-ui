@@ -1,30 +1,24 @@
-<mat-card>
-    <mat-card-title>Outlook Signature Generator</mat-card-title>
-    <mat-card-content>
-        <form action="">
-            <mat-form-field>
-                <mat-label>Benutzername</mat-label>
-                <input matInput placeholder="Benutzername">
-            </mat-form-field>
-            <div>
-                
-                <input  type="file" class="file-input"
-                #fileUpload>
-            </div>
-            
-            
-
-            
-            
-        
-            <div class="file-upload">
-            
-                <button  mat-flat-button color="primary" class="upload-btn"
-                (click)="fileUpload.click()">
-                    Bild
-                </button>
-            </div>
-            <button color="accent" mat-flat-button type="submit">Generieren</button>
-        </form>
-    </mat-card-content>
-</mat-card>
+<main>
+    <mat-card class="form">
+        <h1>OLSM Espas</h1>
+        <mat-card-content>
+            <form (submit)="onFormSubmit($event)" [formGroup]="genereteForm">
+                <mat-form-field>
+                    <mat-label>Benutzername</mat-label>
+                    <input matInput formControlName="username" name="username" placeholder="">
+                </mat-form-field>
+                <div>
+                    <input (change)="onFileChange($event)" accept="image/*" formControlName="file" type="file" class="file-input" #fileUpload>
+                </div>
+                <div class="file-upload">
+                   
+                </div>
+                <button style="margin-top:30px; display: flex;justify-content: center; align-items: center;" color="accent" mat-flat-button type="submit">Generieren</button>
+            </form>
+            <mat-label>Bild: </mat-label>
+            <button mat-flat-button color="primary" class="upload-btn" (click)="fileUpload.click()" type="button">
+                Bild
+            </button>
+        </mat-card-content>
+    </mat-card>
+</main>
