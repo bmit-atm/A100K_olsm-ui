@@ -8,6 +8,7 @@
                     <input matInput formControlName="username" name="username" placeholder="">
                 </mat-form-field>
                 <div>
+                    <mat-label>Bild: </mat-label>
                     <input (change)="onFileChange($event)" accept="image/*" formControlName="file" type="file" class="file-input" #fileUpload>
                 </div>
                 <div class="file-upload">
@@ -15,10 +16,8 @@
                 </div>
                 <button style="margin-top:30px; display: flex;justify-content: center; align-items: center;" color="accent" mat-flat-button type="submit">Generieren</button>
             </form>
-            <mat-label>Bild: </mat-label>
-            <button mat-flat-button color="primary" class="upload-btn" (click)="fileUpload.click()" type="button">
-                Bild
-            </button>
+            
+            
         </mat-card-content>
     </mat-card>
 </main>
