@@ -3,13 +3,26 @@
         <h1>OLSM Espas</h1>
         <mat-card-content>
             <form (submit)="onFormSubmit($event)" [formGroup]="genereteForm">
-                <mat-form-field>
-                    <mat-label>Benutzername</mat-label>
-                    <input matInput formControlName="username" name="username" placeholder="">
-                </mat-form-field>
+                <div style="display: flex; flex-direction: column;">
+                    <mat-form-field>
+                        <mat-label>Gruppe</mat-label>
+                        <mat-select formControlName="gruppe">
+                            <mat-option *ngFor="let gruppe of gruppen" [value]="gruppe.value">{{ gruppe.viewValue }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Link für Bild</mat-label>
+                        <input matInput formControlName="url" name="url" placeholder="">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Signature Name</mat-label>
+                        <input matInput formControlName="name" name="url" placeholder="">
+                    </mat-form-field>
+           
+                </div>
                 <div>
                     <mat-label>Bild: </mat-label>
-                    <input (change)="onFileChange($event)" accept="image/*" formControlName="file" type="file" class="file-input" #fileUpload>
+                    <input (change)="onFileChange($event)" accept="image/*" type="file" class="file-input" #fileUpload>
                 </div>
                 <div class="file-upload">
                    

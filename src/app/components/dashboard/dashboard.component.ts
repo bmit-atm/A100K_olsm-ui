@@ -8,35 +8,52 @@ import { UploadService } from '../../services/upload.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
+import {MatSelectModule} from '@angular/material/select';
+import { NgForOf } from '@angular/common';
+interface Gruppe {
+  value: string;
+  viewValue: string;
+}
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule],
+  imports: [MatIconModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, MatSelectModule, NgForOf],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.sass'
 })
 export class DashboardComponent {
+  gruppen: Gruppe[] = [
+    { value: 'OutlookSIGN_ALL', viewValue: 'OutlookSIGN_ALL' },
+    { value: 'OutlookSIGN_KV', viewValue: 'OutlookSIGN_KV' },
+    { value: 'OutlookSIGN_IT', viewValue: 'OutlookSIGN_IT' },
+  ];
   
   genereteForm = new FormGroup({
-    username: new FormControl(''),
-    file: new FormControl(null)
+    gruppe: new FormControl(''),
+    url: new FormControl(''),
+    file: new FormControl(null),
+    name: new FormControl('')
   });
+
   @ViewChild('fileUpload', { static: false }) fileUpload!: ElementRef;
 
   constructor(private uploadService: UploadService) {}
 
   onFormSubmit(event: any) {
-    event.preventDefault();
-    const username = this.genereteForm.get('username')?.value as string;
+    
+    const gruppe = this.genereteForm.get('gruppe')?.value as string;
+    const url = this.genereteForm.get('url')?.value as string;
     const file = this.genereteForm.get('file')?.value as unknown as File;
+    const name = this.genereteForm.get('name')?.value as string;
+    this.uploadService.uploadImage(gruppe, url, file, name).subscribe(response => {
+      saveAs(response, `signature_${name}_${gruppe}.htm`);
+      console.log(response);
+      console.log(gruppe);
 
-    this.uploadService.uploadImage(username, file).subscribe(response => {
-      saveAs(response, 'signature.htm');
+      this.genereteForm.reset();
     }, (error) => {
       console.log(error);
     });
-
-    console.log(file, username);
   }
 
   onFileChange(event: any) {
@@ -47,5 +64,6 @@ export class DashboardComponent {
       });
     }
   }
+  
   
 }

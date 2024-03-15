@@ -10,9 +10,11 @@ export class UploadService extends BaseService{
     super();
   }
 
-  uploadImage(username: string, image: File) {
+  uploadImage(gruppe: string, url:string, image: File, name: string) {
     const formData = new FormData();
-    formData.append('username', username);
+    formData.append('gruppe', gruppe);
+    formData.append('url', url);
+    formData.append('name', name);
     formData.append('file', image);
   
     return this.http.post(this.getBaseUrl() + 'generate', formData, { responseType: 'blob' });
