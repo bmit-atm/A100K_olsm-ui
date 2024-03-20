@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import {MatSelectModule} from '@angular/material/select';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 interface Gruppe {
   value: string;
   viewValue: string;
@@ -17,7 +17,7 @@ interface Gruppe {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, MatSelectModule, NgForOf],
+  imports: [MatIconModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, MatSelectModule, NgForOf, NgIf],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.sass'
 })
@@ -29,30 +29,37 @@ export class DashboardComponent {
   ];
   
   genereteForm = new FormGroup({
-    gruppe: new FormControl(''),
+    gruppe: new FormControl([]),
     url: new FormControl(''),
     file: new FormControl(null),
     name: new FormControl('')
   });
 
+  previewUrl: string | ArrayBuffer | null = null;
   @ViewChild('fileUpload', { static: false }) fileUpload!: ElementRef;
 
   constructor(private uploadService: UploadService) {}
 
   onFormSubmit(event: any) {
     
-    const gruppe = this.genereteForm.get('gruppe')?.value as string;
+    const gruppe = this.genereteForm.get('gruppe')?.value as [];
     const url = this.genereteForm.get('url')?.value as string;
     const file = this.genereteForm.get('file')?.value as unknown as File;
     const name = this.genereteForm.get('name')?.value as string;
+    console.log(gruppe);
     this.uploadService.uploadImage(gruppe, url, file, name).subscribe(response => {
-      saveAs(response, `signature_${name}_${gruppe}.htm`);
+      const gruppeString = gruppe.join(','); // Hier werden die Gruppennamen durch Unterstriche getrennt
+      saveAs(response, `signature_${name}_${gruppeString}.htm`);
       console.log(response);
       console.log(gruppe);
 
       this.genereteForm.reset();
     }, (error) => {
       console.log(error);
+      console.log(gruppe);
+      console.log(url);
+      console.log(file);
+      console.log(name);
     });
   }
 
@@ -62,6 +69,13 @@ export class DashboardComponent {
       this.genereteForm.patchValue({
         file: file
       });
+
+      // Vorschau des ausgewählten Bildes anzeigen
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result;
+      };
+      reader.readAsDataURL(file);
     }
   }
   
