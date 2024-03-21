@@ -1,0 +1,36 @@
+
+<div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <mat-card>
+          <mat-card-content>
+            <table mat-table [dataSource]="logs" class="mat-elevation-z8" style="width: 100%">
+              
+              <ng-container matColumnDef="gruppe">
+                <th mat-header-cell *matHeaderCellDef> Gruppe </th>
+                <td mat-cell *matCellDef="let log"> {{ log.gruppe }} </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let log"> {{log.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="bild">
+                <th mat-header-cell *matHeaderCellDef> Bild </th>
+                <td mat-cell *matCellDef="let log"> 
+                    <div style="width: 100px; height: 100px;">
+                        <div style="width: 100%; height: 100%;" [innerHTML]="getSafeSvg(log.svg_code)"></div>
+                    </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="created_at">
+                <th mat-header-cell *matHeaderCellDef> Erstellt am </th>
+                <td mat-cell *matCellDef="let log"> {{ log.created_at | date:'dd.MM.yyyy, HH:mm' }} </td>
+            </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>

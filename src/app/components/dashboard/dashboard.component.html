@@ -1,36 +1,33 @@
-<main>
-    <mat-card class="form">
-        <h1>OLSM Espas</h1>
-        <mat-card-content>
-            <form (submit)="onFormSubmit($event)" [formGroup]="genereteForm">
-                <div style="display: flex; flex-direction: column;">
-                    <mat-form-field>
-                        <mat-label>Gruppe</mat-label>
-                        <mat-select formControlName="gruppe" multiple>
-                            <mat-option *ngFor="let gruppe of gruppen" [value]="gruppe.value">{{ gruppe.viewValue }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <mat-label>Link für Bild</mat-label>
-                        <input matInput formControlName="url" name="url" placeholder="">
-                    </mat-form-field>
-                    <mat-form-field>
-                        <mat-label>Signature Name</mat-label>
-                        <input matInput formControlName="name" name="url" placeholder="">
-                    </mat-form-field>
-           
-                </div>
-                <div>
-                    <mat-label>Bild: </mat-label>
-                    <input (change)="onFileChange($event)" accept="image/*" type="file" class="file-input" #fileUpload>
-                </div>
-                <div *ngIf="previewUrl" style="width:250px; height: 150px; display: flex; justify-content: center; align-items: center; padding: 20px; border:  2px black solid;" class="file-upload">
-                    <img style="width: 200px; height: 200px;" *ngIf="previewUrl" [src]="previewUrl" alt="Vorschau des ausgewählten Bildes" style="max-width: 100%; max-height: 200px;">
-                </div>
-                <button style="margin-top:30px; display: flex;justify-content: center; align-items: center;" color="accent" mat-flat-button type="submit">Generieren</button>
-            </form>
-            
-            
-        </mat-card-content>
-    </mat-card>
-</main>
+<mat-card class="form">
+    <mat-card-content>
+        <form (submit)="onFormSubmit($event)" [formGroup]="genereteForm">
+            <div style="display: flex; flex-direction: column;">
+                <mat-form-field>
+                    <mat-label>Gruppe</mat-label>
+                    <mat-select formControlName="gruppe" multiple>
+                        <mat-option *ngFor="let gruppe of gruppen" [value]="gruppe.value">{{ gruppe.viewValue }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Link für Bild</mat-label>
+                    <input matInput formControlName="url" name="url" placeholder="">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Signature Name</mat-label>
+                    <input matInput formControlName="name" name="url" placeholder="">
+                </mat-form-field>
+        
+            </div>
+            <div>
+                <mat-label>Bild: </mat-label>
+                <input (change)="onFileChange($event)" accept="image/*" type="file" class="file-input" #fileUpload>
+            </div>
+            <div *ngIf="previewUrl" style="width:250px; height: 150px; display: flex; justify-content: center; align-items: center; padding: 20px; border:  2px black solid;" class="file-upload">
+                <img style="width: 200px; height: 200px;" *ngIf="previewUrl" [src]="previewUrl" alt="Vorschau des ausgewählten Bildes" style="max-width: 100%; max-height: 200px;">
+            </div>
+            <button style="margin-top:30px; display: flex;justify-content: center; align-items: center;" color="accent" mat-flat-button type="submit">Generieren</button>
+        </form>
+        
+        
+    </mat-card-content>
+</mat-card>
