@@ -17,9 +17,9 @@
               <ng-container matColumnDef="bild">
                 <th mat-header-cell *matHeaderCellDef> Bild </th>
                 <td mat-cell *matCellDef="let log"> 
-                    <div style="width: 100px; height: 100px;">
-                        <div style="width: 100%; height: 100%;" [innerHTML]="getSafeSvg(log.svg_code)"></div>
-                    </div>
+                  <div >
+                    <img style="width: 100px; height: 100px;" [src]="'data:image/svg+xml;base64,' + log.img" />
+                </div>
                 </td>
               </ng-container>
               <ng-container matColumnDef="created_at">

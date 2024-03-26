@@ -6,7 +6,6 @@ import { DatePipe } from '@angular/common';
 // Angular Material
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 @Component({
   selector: 'app-logs',
   standalone: true,
@@ -16,7 +15,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 export class LogsComponent {
   logs: Log[] = [];
-  constructor(private logsService: LogsService, private sanitizer: DomSanitizer) { }
+  constructor(private logsService: LogsService) { }
 
   // DataSources for the logs table
   displayedColumns: string[] = ['gruppe', 'name', 'bild', 'created_at'];
@@ -32,7 +31,4 @@ export class LogsComponent {
     });
   }
 
-  getSafeSvg(svg: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(svg);
-  }
 }
