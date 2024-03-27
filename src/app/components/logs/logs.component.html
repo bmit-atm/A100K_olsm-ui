@@ -5,13 +5,16 @@
         <mat-card>
           <mat-card-content>
             <table mat-table [dataSource]="logs" class="mat-elevation-z8" style="width: 100%">
-              
+              <ng-container matColumnDef="user">
+                <th mat-header-cell *matHeaderCellDef> Benutzer </th>
+                <td mat-cell *matCellDef="let log"> {{ log.user }} </td>
+              </ng-container>
               <ng-container matColumnDef="gruppe">
-                <th mat-header-cell *matHeaderCellDef> Gruppe </th>
+                <th mat-header-cell *matHeaderCellDef> Zielgruppe </th>
                 <td mat-cell *matCellDef="let log"> {{ log.gruppe }} </td>
               </ng-container>
               <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <th mat-header-cell *matHeaderCellDef> Signaturname </th>
                 <td mat-cell *matCellDef="let log"> {{log.name}} </td>
               </ng-container>
               <ng-container matColumnDef="bild">

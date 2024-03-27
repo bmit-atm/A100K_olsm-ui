@@ -6,7 +6,14 @@
 
     <!-- hier ist die navbar with routes-->
     <nav>
-        <button color="primary" mat-stroked-button routerLink="/dashboard">Dashboard</button>
-        <button color="primary" mat-stroked-button routerLink="/logs">User Logs</button>
+        <button color="primary" mat-flat-button routerLink="/dashboard">Dashboard</button>
+        <button color="primary" mat-flat-button routerLink="/logs">User Logs</button>
     </nav>
+    <!-- hier ist die spacer-->
+    <span class="spacer"></span>
+    <!-- hier ist die user profile-->
+    <div class="user-profile">
+        <span style="padding-right: 40px;">Willkommen, {{ user }}</span>
+        <button color="warn" mat-flat-button routerLink="/login" (click)="logout()">Logout</button>
+    </div>
 </mat-toolbar>

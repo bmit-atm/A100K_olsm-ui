@@ -18,7 +18,7 @@ export class LogsComponent {
   constructor(private logsService: LogsService) { }
 
   // DataSources for the logs table
-  displayedColumns: string[] = ['gruppe', 'name', 'bild', 'created_at'];
+  displayedColumns: string[] = ['user', 'gruppe', 'name', 'bild', 'created_at'];
   ngOnInit(): void {
     this.getLogs();
   }

@@ -15,4 +15,13 @@ export class AuthServiceService extends BaseService {
   login(credentials: { username: string; password: string }): Observable<any> {
     return this.http.post<any>('http://localhost:8000/login', credentials);
   }
+
+  getAllGroups(): Observable<any> {
+    return this.http.get<any>(this.getBaseUrl() + 'all-groups');
+  }
+
+  getUser() {
+    const userString = localStorage.getItem('user');
+    return userString ? JSON.parse(userString) : null;
+  }
 }

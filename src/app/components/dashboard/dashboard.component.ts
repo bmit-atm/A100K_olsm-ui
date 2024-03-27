@@ -10,6 +10,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import {MatSelectModule} from '@angular/material/select';
 import { NgForOf, NgIf } from '@angular/common';
+import { AuthServiceService } from '../../services/auth-service.service';
 interface Gruppe {
   value: string;
   viewValue: string;
@@ -23,10 +24,9 @@ interface Gruppe {
 })
 export class DashboardComponent {
   gruppen: Gruppe[] = [
-    { value: 'OutlookSIGN_ALL', viewValue: 'OutlookSIGN_ALL' },
-    { value: 'OutlookSIGN_KV', viewValue: 'OutlookSIGN_KV' },
-    { value: 'OutlookSIGN_IT', viewValue: 'OutlookSIGN_IT' },
+    
   ];
+  user: string = '';
   
   genereteForm = new FormGroup({
     gruppe: new FormControl([]),
@@ -38,8 +38,12 @@ export class DashboardComponent {
   previewUrl: string | ArrayBuffer | null = null;
   @ViewChild('fileUpload', { static: false }) fileUpload!: ElementRef;
 
-  constructor(private uploadService: UploadService) {}
+  constructor(private uploadService: UploadService, private authService: AuthServiceService) {}
 
+  ngOnInit() {
+    this.getAllGroups();
+    this.user = this.authService.getUser();
+  }
   onFormSubmit(event: any) {
     
     const gruppe = this.genereteForm.get('gruppe')?.value as [];
@@ -47,12 +51,12 @@ export class DashboardComponent {
     const file = this.genereteForm.get('file')?.value as unknown as File;
     const name = this.genereteForm.get('name')?.value as string;
     console.log(gruppe);
-    this.uploadService.uploadImage(gruppe, url, file, name).subscribe(response => {
+    this.uploadService.uploadImage(this.user, gruppe, url, file, name).subscribe(response => {
       const gruppeString = gruppe.join(','); // Hier werden die Gruppennamen durch Unterstriche getrennt
       saveAs(response, `signature_${name}_${gruppeString}.htm`);
       console.log(response);
       console.log(gruppe);
-
+      console.log(this.user);
       this.genereteForm.reset();
     }, (error) => {
       console.log(error);
@@ -79,5 +83,12 @@ export class DashboardComponent {
     }
   }
   
+
+  getAllGroups() {
+    this.authService.getAllGroups().subscribe(response => {
+      this.gruppen = response.map((group: any[]) => ({ value: group[0], viewValue: group[0] }));
+    });
+
+  }
   
 }

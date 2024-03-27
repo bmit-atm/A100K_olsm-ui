@@ -3,5 +3,6 @@ export interface Log {
     gruppe: string;
     name: string;
     svg_code: Text;
+    user: string;
     created_at: Date;
 }

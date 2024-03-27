@@ -1,3 +1,4 @@
+<h1>Erstelle neue Signatur</h1>
 <mat-card class="form">
     <mat-card-content>
         <form (submit)="onFormSubmit($event)" [formGroup]="genereteForm">
@@ -22,8 +23,8 @@
                 <mat-label>Bild: </mat-label>
                 <input (change)="onFileChange($event)" accept="image/*" type="file" class="file-input" #fileUpload>
             </div>
-            <div *ngIf="previewUrl" style="width:250px; height: 150px; display: flex; justify-content: center; align-items: center; padding: 20px; border:  2px black solid;" class="file-upload">
-                <img style="width: 200px; height: 200px;" *ngIf="previewUrl" [src]="previewUrl" alt="Vorschau des ausgewählten Bildes" style="max-width: 100%; max-height: 200px;">
+            <div *ngIf="previewUrl" style="width:500px; height: 200px; display: flex; justify-content: center; align-items: center; padding: 20px; border:  2px black solid;" class="file-upload">
+                <img *ngIf="previewUrl" [src]="previewUrl" alt="Vorschau des ausgewählten Bildes" style="max-width: 100%; max-height: 200px;">
             </div>
             <button style="margin-top:30px; display: flex;justify-content: center; align-items: center;" color="accent" mat-flat-button type="submit">Generieren</button>
         </form>

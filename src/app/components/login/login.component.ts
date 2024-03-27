@@ -7,7 +7,6 @@ import { MatInputModule } from '@angular/material/input';
 import { AuthServiceService } from '../../services/auth-service.service';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpTokenService } from '../../services/http-token.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -22,7 +21,6 @@ export class LoginComponent {
     private authService: AuthServiceService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private httpTokenService: HttpTokenService
   ) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
@@ -31,28 +29,23 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    this.httpTokenService.getCrsfToken().subscribe(
-      (x) => {
-        console.log('CSRF token:', x);
-        if (this.loginForm.valid) {
-          const credentials = this.loginForm.value;
-          this.authService.login(credentials).subscribe(
-            () => {
-              // Erfolgreicher Login, weiterleiten oder andere Aktionen durchführen
-              this.router.navigate(['dashboard']);
-            },
-            error => {
-              // Fehlerbehandlung für fehlgeschlagenen Login
-              console.error('Login failed:', error);
-            }
-          );
+    
+    if (this.loginForm.valid) {
+      const username = this.loginForm.value.username;
+      const credentials = this.loginForm.value;
+      this.authService.login(credentials).subscribe(
+        (response) => {
+          localStorage.setItem('access_token', response.token);
+          localStorage.setItem('user', JSON.stringify(username));  // Speichern Sie die Benutzerinformationen
+          // Erfolgreicher Login, weiterleiten oder andere Aktionen durchführen
+          this.router.navigate(['dashboard']);
+        },
+        error => {
+          // Fehlerbehandlung für fehlgeschlagenen Login
+          console.error('Login failed:', error);
         }
-      },
-      error => {
-        console.error('Failed to get CSRF token:', error);
-      }
-    );
-   
+      );
+    }
   }
-
+   
 }
