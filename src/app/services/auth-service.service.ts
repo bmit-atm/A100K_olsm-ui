@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthServiceService extends BaseService {
+export class AuthService extends BaseService {
 
   constructor(private http: HttpClient) { 
     super();

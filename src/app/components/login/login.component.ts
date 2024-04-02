@@ -4,9 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AuthServiceService } from '../../services/auth-service.service';
+import { AuthService } from '../../services/auth-service.service';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SnackbarService } from '../../services/snackbar.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -18,9 +19,10 @@ export class LoginComponent {
   loginForm: FormGroup;
 
   constructor(
-    private authService: AuthServiceService,
+    private authService: AuthService,
     private router: Router,
     private formBuilder: FormBuilder,
+    private snackbarService: SnackbarService
   ) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
@@ -39,10 +41,17 @@ export class LoginComponent {
           localStorage.setItem('user', JSON.stringify(username));  // Speichern Sie die Benutzerinformationen
           // Erfolgreicher Login, weiterleiten oder andere Aktionen durchführen
           this.router.navigate(['dashboard']);
+          this.snackbarService.openSnackBar({
+            text: 'erfolgreich eingeloggt!',
+            color: 'success',
+          });
+          
         },
         error => {
-          // Fehlerbehandlung für fehlgeschlagenen Login
-          console.error('Login failed:', error);
+          this.snackbarService.openSnackBar({
+            text: 'Fehler beim Einloggen!',
+            color: 'error',
+          });
         }
       );
     }

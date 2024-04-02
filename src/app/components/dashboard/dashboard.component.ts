@@ -5,12 +5,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { UploadService } from '../../services/upload.service';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import {MatSelectModule} from '@angular/material/select';
 import { NgForOf, NgIf } from '@angular/common';
-import { AuthServiceService } from '../../services/auth-service.service';
+import { AuthService } from '../../services/auth-service.service';
+import { SnackbarService } from '../../services/snackbar.service';
 interface Gruppe {
   value: string;
   viewValue: string;
@@ -24,24 +25,26 @@ interface Gruppe {
 })
 export class DashboardComponent {
   gruppen: Gruppe[] = [
-    
+    { value: 'A100K', viewValue: 'A100K' },
+    { value: 'A100K-1', viewValue: 'A100K-1'},
+    { value: 'A100K-2', viewValue: 'A100K-2'}
   ];
   user: string = '';
-  
+  isSubmitted: boolean = false;
   genereteForm = new FormGroup({
-    gruppe: new FormControl([]),
-    url: new FormControl(''),
-    file: new FormControl(null),
-    name: new FormControl('')
+    gruppe: new FormControl([], Validators.required),
+    url: new FormControl('', Validators.required),
+    file: new FormControl(null, Validators.required),
+    name: new FormControl('', Validators.required)
   });
 
   previewUrl: string | ArrayBuffer | null = null;
   @ViewChild('fileUpload', { static: false }) fileUpload!: ElementRef;
 
-  constructor(private uploadService: UploadService, private authService: AuthServiceService) {}
+  constructor(private uploadService: UploadService, private authService: AuthService, private snackbarService: SnackbarService) {}
 
   ngOnInit() {
-    this.getAllGroups();
+    //this.getAllGroups();
     this.user = this.authService.getUser();
   }
   onFormSubmit(event: any) {
@@ -54,16 +57,28 @@ export class DashboardComponent {
     this.uploadService.uploadImage(this.user, gruppe, url, file, name).subscribe(response => {
       const gruppeString = gruppe.join(','); // Hier werden die Gruppennamen durch Unterstriche getrennt
       saveAs(response, `signature_${name}_${gruppeString}.htm`);
-      console.log(response);
-      console.log(gruppe);
-      console.log(this.user);
+      
+      
+      // Formular zurücksetzen
       this.genereteForm.reset();
+      this.previewUrl = null;
+      this.fileUpload.nativeElement.value = '';
+      this.isSubmitted = true;
+      // Validierungsfehler zurücksetzen für alle Formularfelder
+      Object.keys(this.genereteForm.controls).forEach(key => {
+        this.genereteForm.get(key)?.setErrors(null);
+      });
+
+      // Erfolgsmeldung anzeigen
+      this.snackbarService.openSnackBar({
+        text: 'Signature wurde erfolgreich generiert!',
+        color: 'success',
+      });
     }, (error) => {
-      console.log(error);
-      console.log(gruppe);
-      console.log(url);
-      console.log(file);
-      console.log(name);
+      this.snackbarService.openSnackBar({
+        text: 'Fehler beim Generieren von Signature!',
+        color: 'error',
+      });
     });
   }
 
@@ -74,12 +89,23 @@ export class DashboardComponent {
         file: file
       });
 
-      // Vorschau des ausgewählten Bildes anzeigen
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewUrl = reader.result;
-      };
-      reader.readAsDataURL(file);
+      // Datentyp des files überprüfen
+      if (!file.type.includes('image')) {
+        this.snackbarService.openSnackBar({
+          text: 'Nur Bilder sind erlaubt!',
+          color: 'error',
+        });
+        this.fileUpload.nativeElement.value = '';
+        return;
+      }else{
+        // Vorschau des ausgewählten Bildes anzeigen
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.previewUrl = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+      
     }
   }
   

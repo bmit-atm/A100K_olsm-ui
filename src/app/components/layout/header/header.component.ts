@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
-import { AuthServiceService } from '../../../services/auth-service.service';
+import { AuthService } from '../../../services/auth-service.service';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -13,7 +13,7 @@ import { AuthServiceService } from '../../../services/auth-service.service';
 export class HeaderComponent {
   user: String = '';
 
-  constructor(private authService: AuthServiceService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
   ngOnInit() {
     this.user = this.authService.getUser();
   }

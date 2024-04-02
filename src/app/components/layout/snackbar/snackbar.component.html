@@ -1,0 +1,4 @@
+<div class="snackbar-wrapper">
+    <label *ngIf="!!data" [class]="data.color + '-color'">{{ data.text }}</label>
+    <button mat-flat-button color="primary" (click)="onClose()">Schliessen</button>
+</div>

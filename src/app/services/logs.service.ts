@@ -14,4 +14,8 @@ export class LogsService extends BaseService{
   getLogs() {
     return this.http.get<Log[]>(this.getBaseUrl() + 'logs');
   }
+
+  deleteLog(id: number) {
+    return this.http.delete(this.getBaseUrl() + 'logs/' + id);
+  }
 }

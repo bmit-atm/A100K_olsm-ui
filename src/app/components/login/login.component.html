@@ -7,21 +7,23 @@
         <table class="example-full-width" cellspacing="0">
           <tr>
             <td>
-              <mat-form-field class="example-full-width">
-                <input matInput formControlName="username" placeholder="Username" required>
+              <mat-form-field>
+                <mat-label>benutzername</mat-label>
+                <input matInput formControlName="username" required>
               </mat-form-field>
             </td>
           </tr>
           <tr>
             <td>
               <mat-form-field class="example-full-width">
-                <input matInput formControlName="password" placeholder="Password" type="password" required>
+                <mat-label>kennwort</mat-label>
+                <input matInput formControlName="password" type="password" required>
               </mat-form-field>
             </td>
           </tr>
         </table>
         <mat-card-actions>
-          <button mat-raised-button color="primary" type="submit">Login</button>
+          <button mat-raised-button color="accent" type="submit" [disabled]="!loginForm.valid">Login</button>
         </mat-card-actions>
       </form>
     </mat-card-content>
