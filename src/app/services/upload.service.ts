@@ -10,13 +10,14 @@ export class UploadService extends BaseService{
     super();
   }
 
-  uploadImage(gruppe: string, url:string, image: File, name: string) {
+  uploadImage(user: string, gruppe: [], url:string, image: File, name: string) {
     const formData = new FormData();
-    formData.append('gruppe', gruppe);
+    formData.append('gruppe', gruppe.join(',')); // Fix: Convert the array to a comma-separated string
     formData.append('url', url);
     formData.append('name', name);
     formData.append('file', image);
+    formData.append('user', user);
   
-    return this.http.post(this.getBaseUrl() + 'generate', formData, { responseType: 'blob' });
+    return this.http.post(this.getBaseUrl() + 'generate', formData,  { responseType: 'blob' });
   }
 }

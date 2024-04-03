@@ -5,11 +5,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { UploadService } from '../../services/upload.service';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
 import {MatSelectModule} from '@angular/material/select';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
+import { AuthService } from '../../services/auth-service.service';
+import { SnackbarService } from '../../services/snackbar.service';
 interface Gruppe {
   value: string;
   viewValue: string;
@@ -17,42 +19,64 @@ interface Gruppe {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [MatIconModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, MatSelectModule, NgForOf],
+  imports: [MatIconModule, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, ReactiveFormsModule, MatSelectModule, NgForOf, NgIf],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.sass'
 })
 export class DashboardComponent {
   gruppen: Gruppe[] = [
-    { value: 'OutlookSIGN_ALL', viewValue: 'OutlookSIGN_ALL' },
-    { value: 'OutlookSIGN_KV', viewValue: 'OutlookSIGN_KV' },
-    { value: 'OutlookSIGN_IT', viewValue: 'OutlookSIGN_IT' },
+    
   ];
-  
+  user: string = '';
+  isSubmitted: boolean = false;
   genereteForm = new FormGroup({
-    gruppe: new FormControl(''),
-    url: new FormControl(''),
-    file: new FormControl(null),
-    name: new FormControl('')
+    gruppe: new FormControl([], Validators.required),
+    url: new FormControl('', Validators.required),
+    file: new FormControl(null, Validators.required),
+    name: new FormControl('', Validators.required)
   });
 
+  previewUrl: string | ArrayBuffer | null = null;
   @ViewChild('fileUpload', { static: false }) fileUpload!: ElementRef;
 
-  constructor(private uploadService: UploadService) {}
+  constructor(private uploadService: UploadService, private authService: AuthService, private snackbarService: SnackbarService) {}
 
+  ngOnInit() {
+    this.getAllGroups();
+    this.user = this.authService.getUser();
+  }
   onFormSubmit(event: any) {
     
-    const gruppe = this.genereteForm.get('gruppe')?.value as string;
+    const gruppe = this.genereteForm.get('gruppe')?.value as [];
     const url = this.genereteForm.get('url')?.value as string;
     const file = this.genereteForm.get('file')?.value as unknown as File;
     const name = this.genereteForm.get('name')?.value as string;
-    this.uploadService.uploadImage(gruppe, url, file, name).subscribe(response => {
-      saveAs(response, `signature_${name}_${gruppe}.htm`);
-      console.log(response);
-      console.log(gruppe);
-
+    console.log(gruppe);
+    this.uploadService.uploadImage(this.user, gruppe, url, file, name).subscribe(response => {
+      const gruppeString = gruppe.join(','); // Hier werden die Gruppennamen durch Unterstriche getrennt
+      saveAs(response, `signature_${name}_${gruppeString}.htm`);
+      
+      
+      // Formular zurücksetzen
       this.genereteForm.reset();
+      this.previewUrl = null;
+      this.fileUpload.nativeElement.value = '';
+      this.isSubmitted = true;
+      // Validierungsfehler zurücksetzen für alle Formularfelder
+      Object.keys(this.genereteForm.controls).forEach(key => {
+        this.genereteForm.get(key)?.setErrors(null);
+      });
+
+      // Erfolgsmeldung anzeigen
+      this.snackbarService.openSnackBar({
+        text: 'Signature wurde erfolgreich generiert!',
+        color: 'success',
+      });
     }, (error) => {
-      console.log(error);
+      this.snackbarService.openSnackBar({
+        text: 'Fehler beim Generieren von Signature!',
+        color: 'error',
+      });
     });
   }
 
@@ -62,8 +86,33 @@ export class DashboardComponent {
       this.genereteForm.patchValue({
         file: file
       });
+
+      // Datentyp des files überprüfen
+      if (!file.type.includes('image')) {
+        this.snackbarService.openSnackBar({
+          text: 'Nur Bilder sind erlaubt!',
+          color: 'error',
+        });
+        this.fileUpload.nativeElement.value = '';
+        return;
+      }else{
+        // Vorschau des ausgewählten Bildes anzeigen
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.previewUrl = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
+      
     }
   }
   
+
+  getAllGroups() {
+    this.authService.getAllGroups().subscribe(response => {
+      this.gruppen = response.map((group: any[]) => ({ value: group[0], viewValue: group[0] }));
+    });
+
+  }
   
 }

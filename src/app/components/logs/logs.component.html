@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <mat-card>
+        <mat-card-content>
+          <ng-container *ngIf="logs.length; else noLogs">
+            <table mat-table [dataSource]="logs" class="mat-elevation-z8" style="width: 100%">
+              <ng-container matColumnDef="user">
+                <th mat-header-cell *matHeaderCellDef> Benutzer </th>
+                <td mat-cell *matCellDef="let log"> {{ log.user }} </td>
+              </ng-container>
+              <ng-container matColumnDef="gruppe">
+                <th mat-header-cell *matHeaderCellDef> Zielgruppe </th>
+                <td mat-cell *matCellDef="let log"> {{ log.gruppe }} </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Signaturname </th>
+                <td mat-cell *matCellDef="let log"> {{log.name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="bild">
+                <th mat-header-cell *matHeaderCellDef> Bild </th>
+                <td mat-cell *matCellDef="let log"> 
+                  <div >
+                    <img style="width: 100px; height: 100px;" [src]="'data:image/;base64,' + log.img" />
+                </div>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="created_at">
+                <th mat-header-cell *matHeaderCellDef> Erstellt am </th>
+                <td mat-cell *matCellDef="let log"> {{ log.created_at | date:'dd.MM.yyyy, HH:mm' }} </td>
+            </ng-container>
+
+            <!-- the button for delete-->
+            <ng-container matColumnDef="delete">
+              <th mat-header-cell *matHeaderCellDef> Aktionen </th>
+              <td mat-cell *matCellDef="let log"> 
+                <button mat-mini-fab color="warn" (click)="deleteLog(log.id)"><mat-icon>delete</mat-icon></button>
+              </td>
+            </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </ng-container>
+          <ng-template #noLogs>
+            <p>Keine Logs vorhanden</p>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

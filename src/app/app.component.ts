@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import { Component, OnInit } from '@angular/core';
+import { MainComponent } from './components/layout/main/main.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [ MainComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.sass'
 })
-export class AppComponent {
-  title = 'olsm-ui';
+export class AppComponent{
+ 
 }
