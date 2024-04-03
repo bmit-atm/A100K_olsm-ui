@@ -25,9 +25,7 @@ interface Gruppe {
 })
 export class DashboardComponent {
   gruppen: Gruppe[] = [
-    { value: 'A100K', viewValue: 'A100K' },
-    { value: 'A100K-1', viewValue: 'A100K-1'},
-    { value: 'A100K-2', viewValue: 'A100K-2'}
+    
   ];
   user: string = '';
   isSubmitted: boolean = false;
@@ -44,7 +42,7 @@ export class DashboardComponent {
   constructor(private uploadService: UploadService, private authService: AuthService, private snackbarService: SnackbarService) {}
 
   ngOnInit() {
-    //this.getAllGroups();
+    this.getAllGroups();
     this.user = this.authService.getUser();
   }
   onFormSubmit(event: any) {
