@@ -8,5 +8,6 @@ import { MainComponent } from './components/layout/main/main.component';
   styleUrl: './app.component.sass'
 })
 export class AppComponent{
+  title: string = 'olsm-ui';
  
 }

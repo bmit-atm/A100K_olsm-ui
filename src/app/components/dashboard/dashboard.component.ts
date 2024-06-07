@@ -12,6 +12,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { NgForOf, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth-service.service';
 import { SnackbarService } from '../../services/snackbar.service';
+
 interface Gruppe {
   value: string;
   viewValue: string;
@@ -54,7 +55,10 @@ export class DashboardComponent {
     console.log(gruppe);
     this.uploadService.uploadImage(this.user, gruppe, url, file, name).subscribe(response => {
       const gruppeString = gruppe.join(','); // Hier werden die Gruppennamen durch Unterstriche getrennt
-      saveAs(response, `signature_${name}_${gruppeString}.htm`);
+       // Speichern Sie die ZIP-Datei
+      const blob = new Blob([response], { type: 'application/zip' });
+      saveAs(blob, `signature_${name}_${gruppeString}.zip`);
+
       
       
       // Formular zurücksetzen

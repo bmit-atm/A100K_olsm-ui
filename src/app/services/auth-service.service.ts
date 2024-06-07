@@ -11,9 +11,9 @@ export class AuthService extends BaseService {
   constructor(private http: HttpClient) { 
     super();
   }
-
+  baseUrl = 'http://localhost:8000/';
   login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post<any>('http://localhost:8000/login', credentials).pipe(
+    return this.http.post<any>(this.baseUrl + 'login', credentials).pipe(
       tap(response => {
         localStorage.setItem('access_token', response.token);
       })
